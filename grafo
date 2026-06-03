@@ -1,0 +1,41 @@
++------------------------------------------+
+              |  N1: Entrada no método; inicializa SQL;  |
+              |            chama conectarBD()            |
+              +--------------------+---------------+-----+
+                                   |               |
+                                   | (fluxo comum) | (erro em conectarBD)
+                                   v               |
+              +--------------------+-----+         |
+              |  N2: Início do try; monta|         |
+              |  query SQL por concat.   |         |
+              +--------------------+-----+         |
+                                   |               |
+                                   | (fluxo comum) | (erro na string)
+                                   v               |
+              +--------------------+-----+         |
+              | N3: Cria Statement e     +---------+
+              | executa query (executeQuery)       |
+              +--------------------+-----+         |
+                                   |               |
+                                   | (fluxo comum) | (erro SQL / NPE)
+                                   v               |
+                            /------+------\\       |
+                           /   N4: Decisão \\      |
+                          <  do laço while  >      |
+                           \\  (rs.next()) /       |
+                            \\-----+------/        |
+                                   |               |
+                    +--------------+-------+       |
+             (false)|                      | (true)|
+                    v                      v       |
+         +----------+----------+     +-----+-----+ |
+         | N7: Fim do método;  |     | N5: Corpo | |
+         |    return result    |     | do while  | |
+         +----------+----------+     +-----+-----+ |
+                    ^                      |       |
+                    |                      +-------+
+                    |                              |
+                    |                     +--------+--------+
+                    |                     |N6: catch(Exception e)   |
+                    +---------------------+  captura/silencia erro  |
+                                          +-------------------------+
