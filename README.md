@@ -14,3 +14,17 @@ end try
 :Nó 7: Return result;
 stop
 @enduml
+
+Número de Nós (N): 7
+
+Número de Arestas (E): 9 (Considerando o fluxo padrão e os desvios de exceção mapeados para o catch).
+
+Número de Componentes Conexos (P): 1 (O método é um programa único/isolado).
+
+V(G) = E - N + 2P
+
+V(G) = 9 - 7 + 2(1)
+
+V(G) = 2 + 2
+
+V(G) = 4
