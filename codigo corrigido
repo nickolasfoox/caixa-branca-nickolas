@@ -1,0 +1,65 @@
+package login;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Classe responsável pela autenticação e gestão de sessões de usuários.
+ * Refatorada para seguir os padrões de Segurança (OWASP) e Clean Code.
+ */
+public class User {
+
+    // Constantes de configuração de banco de dados (Idealmente viriam de um arquivo .env ou properties)
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/test";
+    private static final String USER = "lopes";
+    private static final String PASSWORD = "123";
+
+    /**
+     * Estabelece conexão com o banco de dados MySQL.
+     * @return Connection configurada
+     * @throws SQLException caso ocorra erro na conexão
+     */
+    private Connection conectarBD() throws SQLException {
+        // O JDBC moderno dispensa o uso de Class.forName() para drivers compatíveis
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+
+    /**
+     * Verifica as credenciais do usuário de forma segura contra SQL Injection.
+     * * @param login Usuário informado no sistema
+     * @param senha Senha informada no sistema
+     * @return true se as credenciais forem válidas, false caso contrário
+     */
+    public boolean verificarUsuario(String login, String senha) {
+        // query parametrizada para evitar SQL Injection
+        String sql = "SELECT nome FROM usuarios WHERE login = ? AND senha = ?";
+        
+        // fecha automaticamente todos os recursos na ordem inversa
+        try (Connection conn = conectarBD();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            // atribuição segura dos parâmetros de busca
+            stmt.setString(1, login);
+            stmt.setString(2, senha);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // capturar o dado localmente se necessário
+                    String nomeUsuario = rs.getString("nome");
+                    System.out.println("Usuário autenticado com sucesso: " + nomeUsuario);
+                    return true;
+                }
+            }
+            
+        } catch (SQLException e) {
+            // log detalhado do erro para diagnóstico administrativo
+            System.err.println("Erro crítico durante a execução da autenticação no Banco de Dados.");
+            e.printStackTrace(); 
+        }
+        
+        return false;
+    }
+}
