@@ -1,4 +1,8 @@
 # caixa-branca-nickolas
+INTRODUÇÃO
+
+Essa atividade visa verificar erros e corrigir os erros com o metodo de caixa branca.
+
 @startuml
 
 start
@@ -42,3 +46,14 @@ V(G) = 9 - 7 + 2(1)
 V(G) = 2 + 2
 
 V(G) = 4
+
+CONCLUSÃO
+
+O teste funcional é nescessário para virificar principalmente erros de segurança.
+
+A maior dificuldade foi a analise do codigo onde tive que buscar mais conhecimentos sobre o codigo de forma geral.
+A correção do codigo visto que foi nescessário rever cada erro e exercer o conhecimento para corrigilos sem criar novos erros.
+
+O impacto da correção do codigo foi corrigir possiveis erros de segurança.
+
+A qualidade do software é importante principalmente para evitar fraudes e vazamento de dados.
